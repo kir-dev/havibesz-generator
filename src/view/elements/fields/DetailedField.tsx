@@ -1,7 +1,7 @@
 import { FieldBase } from "../FieldBase";
 import { DetailedFieldType } from "../../../model/Report";
 import { Heading, Input, Text, VStack } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 interface DetailedFieldProps {
@@ -14,15 +14,19 @@ export function DetailedField({
   onChange,
   onDelete,
 }: DetailedFieldProps) {
-  const [editing, setEditing] = useState(false);
+  const [editing, setEditing] = useState(true);
   const [data, setData] = useState(field);
-  const { register, handleSubmit } = useForm({ defaultValues: data });
+  const { register, handleSubmit, setFocus } = useForm({ defaultValues: data });
 
   const onSubmit = (value: DetailedFieldType) => {
     setData(value);
     setEditing(false);
     onChange(value);
   };
+
+  useEffect(() => {
+    if (editing) setFocus("title");
+  }, [editing, setFocus]);
 
   return editing ? (
     <form onSubmit={handleSubmit(onSubmit)}>
